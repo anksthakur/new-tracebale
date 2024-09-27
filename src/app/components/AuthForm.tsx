@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 
 const AuthForm = ({ type }: any) => {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<any>({
         name: '',
         email: '',
         password: '',
@@ -21,6 +21,12 @@ const AuthForm = ({ type }: any) => {
         e.preventDefault()
         console.log(formData)
         localStorage.setItem("signup-data", JSON.stringify(formData))
+        setFormData({
+            name: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        })
     }
 
 
