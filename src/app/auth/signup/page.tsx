@@ -37,9 +37,9 @@ const handleOnchange = (event:any)=>{
   }
   return (
     <>
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-      <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
-      <form action="" method="POST">
+   <div className="signup-form flex justify-center items-center h-screen">
+        <form method= "POST" className="lg:w-[36%] mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="name">Full Name</label>
           <input
@@ -97,9 +97,10 @@ const handleOnchange = (event:any)=>{
         </div>
 
         <button className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"onClick={handleSubmit}>Sign Up</button>
+      <p className="mt-4 text-center text-gray-600">Already have an account? <Link href="/auth/signin" className="text-blue-500 hover:underline">Log in</Link></p>
+
       </form>
 
-      <p className="mt-4 text-center text-gray-600">Already have an account? <Link href="/auth/signin" className="text-blue-500 hover:underline">Log in</Link></p>
     </div>
     </>
   )

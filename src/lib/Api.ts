@@ -3,8 +3,9 @@ import Cookies from "js-cookie";
 const headers = {
   'Content-Type': 'application/json',
 };
+
 const storedToken = Cookies.get("token"); // Dynamically get the token here
-console.log(storedToken,"======")
+//console.log(storedToken,"======")
 // Common GET request function
 export async function get<T>(url: string): Promise<T> {
 

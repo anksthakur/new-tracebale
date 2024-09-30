@@ -5,7 +5,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import ToastProvider from "@/lib/ToastProvider";
 import { usePathname } from "next/navigation";
-
+import Cookies from "js-cookie";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,6 +28,10 @@ export default function RootLayout({
   const pathName = usePathname()
   const isNavbar = pathName.includes("/auth")
   //console.log(isNavbar)
+
+  const storedToken = Cookies.get("token");
+console.log("token :",storedToken)
+
   return (
     <>
     <html lang="en">
