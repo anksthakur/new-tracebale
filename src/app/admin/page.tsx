@@ -6,7 +6,7 @@ const page = () => {
         <>
             <div>
             
-                <h1>Admin</h1>
+                <h1 className='text-red-600'>Admin Page</h1>
 
             </div>
         </>
