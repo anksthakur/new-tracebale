@@ -12,6 +12,7 @@ const Page = () => {
     email: "",
     password: "",
   });
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -21,18 +22,22 @@ const Page = () => {
     }));
   };
 
+  const handlePasswordToggle = () => {
+    setIsPasswordVisible(prev => !prev);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
       const newData: any = await post("user/login", formData);
-      console.log(newData, "new Data signin----");
+      // console.log(newData, "new Data signin----");
 
       if (newData.success) {
         toasterSuccess("Login successfully");
         Cookies.set('token', newData.data.accessToken);
         Cookies.set('role', newData.data.user.role);
-        //localStorage.setItem('role',newData.data.user.role)
+        Cookies.set('name', newData.data.user.username)
         router.push("/");
       } else {
         toasterError("Login failed");
@@ -60,18 +65,31 @@ const Page = () => {
           />
         </div>
 
-        <div className="mb-6">
+        <div className="mb-6 ">       
           <label className="block text-gray-700 mb-2" htmlFor="password">Password</label>
-          <input
-            type="password"
+         <div className='flex'>
+         <input
+            type={isPasswordVisible ? "text" : "password"}
             id="password"
             name="password"
             required
             value={formData.password}
             onChange={handleOnChange}
-            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 relative"
             placeholder="********"
           />
+          <button
+            type="button"
+            onClick={handlePasswordToggle}
+            className="relative ml-[-45px]"
+          >
+            {isPasswordVisible ? (
+              <span className="material-icons m-auto">Hide</span>
+            ) : (
+              <span className="material-icons mt-10 pt-10">Show</span>
+            )}
+          </button>
+         </div>
         </div>
 
         <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Sign In</button>

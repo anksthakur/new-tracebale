@@ -53,7 +53,6 @@ const Page: React.FC = () => {
 
   const handleSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
     const newData: any = await post("user/signup", values);
-    console.log(newData,"new data signup ----");
 
     if (newData.success) {
       toasterSuccess("Signup successful");

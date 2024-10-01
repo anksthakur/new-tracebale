@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <h1 className="text-blue-600">My App</h1>
+        <h1 className="text-blue-600">Home Page</h1>
       </div>
     </>
   );

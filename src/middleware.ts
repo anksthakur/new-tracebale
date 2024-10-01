@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
 
   // Retrieve the user role from cookies
   const role = request.cookies.get('role')?.value;
-  console.log("role: ", role); // Logging the role for debugging
+ // console.log("role: ", role); // Logging the role for debugging
 
   if (role) {
     // Check if the current pathname is allowed for the user role
@@ -30,6 +30,7 @@ export function middleware(request: NextRequest) {
     if (!allowedRoutes.includes(pathname)) {
       // If the route is not allowed for non-admin roles, redirect to home
       return NextResponse.redirect(new URL('/', request.url));
+     //return NextResponse.next();
     }
   } else {
     // If no role is found, redirect to login or unauthorized page
