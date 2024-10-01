@@ -1,45 +1,51 @@
-"use client"
+"use client";
 import { toasterError, toasterSuccess } from '@/app/components/core/Toaster';
-import Link from 'next/link'
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Cookies from "js-cookie";
 import { post } from '@/lib/Api';
 
-const page = () => {
+const Page = () => {
   const router = useRouter();
-  const [formData,setformdata] = useState({
-    email:"",
-    password:"",
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
   });
-  const handleOnchange = (event:any)=>{
-    const {name,value} = event?.target
-    setformdata((pre:any)=>({
-      ...pre ,
-      [name]:value
-    }))
-  }
 
-  const handleSubmit = async (event:any)=>{
+  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const newData:any = await post("user/login",formData)
-    console.log(newData)
-  
-    if(newData.success){
-      toasterSuccess("Signup successfully")
-      Cookies.set('token',newData.data.accessToken);
-      router.push("/");
-    }else{
-      toasterError("Login failed")
+
+    try {
+      const newData: any = await post("user/login", formData);
+      console.log(newData, "new Data signin----");
+
+      if (newData.success) {
+        toasterSuccess("Login successfully");
+        Cookies.set('token', newData.data.accessToken);
+        Cookies.set('role', newData.data.user.role);
+        //localStorage.setItem('role',newData.data.user.role)
+        router.push("/");
+      } else {
+        toasterError("Login failed");
+      }
+    } catch (error) {
+      toasterError("Please check your Email & Password");
     }
-  }
+  };
 
   return (
-    <>
- 
- <div className="signup-form flex justify-center items-center h-screen">
-        <form onSubmit={handleSubmit} className="lg:w-[36%] mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold text-center mb-4">Sign Up</h2>
+    <div className="signup-form flex justify-center items-center h-screen">
+      <form onSubmit={handleSubmit} className="lg:w-[36%] mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-4">Sign In</h2> {/* Changed to "Sign In" */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="email">Email Address</label>
           <input
@@ -48,7 +54,7 @@ const page = () => {
             name="email"
             required
             value={formData.email}
-            onChange={handleOnchange}
+            onChange={handleOnChange}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="example@example.com"
           />
@@ -62,20 +68,19 @@ const page = () => {
             name="password"
             required
             value={formData.password}
-            onChange={handleOnchange}
+            onChange={handleOnChange}
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="********"
           />
         </div>
 
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition" onClick={handleSubmit}>Sign In</button>
-        <p className="mt-4 text-center text-gray-600">Don't have an account? <Link href="/auth/signup" className="text-blue-500 hover:underline">Sign up</Link></p>
+        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">Sign In</button>
+        <p className="mt-4 text-center text-gray-600">
+          Don't have an account? <Link href="/auth/signup" className="text-blue-500 hover:underline">Sign up</Link>
+        </p>
       </form>
-
-     
     </div>
-    </>
-  )
+  );
 }
 
-export default page
+export default Page;
