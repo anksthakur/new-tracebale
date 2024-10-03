@@ -1,17 +1,19 @@
-"use client"
+"use client";
 import Cookies from "js-cookie";
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
-
 
 const headers = {
   'Content-Type': 'application/json',
 };
 
 const storedToken = Cookies.get("token");
-
+const shownMessages = new Set();
 
 const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  if (shownMessages.has(message)) return;
+  shownMessages.add(message);
+
   Toastify({
     text: message,
     duration: 3000,
@@ -35,8 +37,7 @@ export async function get<T>(url: string): Promise<T> {
     if (!response.ok) {
       const errorData = await response.json();
       showToast(errorData.message || 'Error occurred while fetching data', 'error');
-     throw new Error(`Error: ${response.statusText}`);
-
+      throw new Error(`Error: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -44,14 +45,11 @@ export async function get<T>(url: string): Promise<T> {
     return data;
   } catch (error: any) {
     showToast(error.message || 'An unexpected error occurred', 'error');
-   
     throw error;
-    
   }
 }
 
 export async function post<T>(url: string, data: unknown): Promise<T> {
-
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
       method: 'POST',
@@ -64,22 +62,17 @@ export async function post<T>(url: string, data: unknown): Promise<T> {
     const responseData = await response.json();
 
     if (!response.ok) {
-      showToast(responseData?.error?.message || "Signup failed", 'error');
-
+      const errorMessage = responseData?.error?.message || "Check your password";
+      showToast(errorMessage, 'error');
       throw {
-        message: responseData?.error?.message || "Unknown error",
-        code: responseData?.error?.code || "UNKNOWN_ERROR",
+        message: errorMessage,
       };
-     
     }
-    showToast(' Login successfully !', 'success');
+
+    showToast('Login successfully!', 'success');
     return responseData;
   } catch (error: any) {
-
-    console.log(error.code,"========")
     showToast(error.message || 'An unexpected error occurred', 'error');
-
     throw error;
- 
   }
 }
