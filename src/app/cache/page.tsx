@@ -8,7 +8,7 @@ export default function Home() {
 
     const storeData = 'productData';
     const storeDataTime = 'productDataTime'; 
-    const dataDuration = 300000; 
+    const dataDuration = 9000; 
 
     useEffect(() => {
         const cachedData = localStorage.getItem(storeData);
@@ -20,6 +20,10 @@ export default function Home() {
             if (isCacheValid) {
                 setData(JSON.parse(cachedData)); 
                 return;
+            }else {
+                // Clear expired cache
+                localStorage.removeItem(storeData);
+                localStorage.removeItem(storeDataTime);
             }
         }
     }, []);
@@ -46,8 +50,7 @@ export default function Home() {
                     localStorage.removeItem(storeDataTime);
                 }
             }
-
-            // If no valid cache, fetch data from API
+            
             const response = await fetch('https://dummyjson.com/products/1'); 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
