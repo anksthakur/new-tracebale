@@ -34,16 +34,17 @@ export async function get<T>(url: string): Promise<T> {
       },
     });
 
+    const data = await response.json();
+console.log(data,"999999999")
     if (!response.ok) {
-      const errorData = await response.json();
-      showToast(errorData.message || 'Error occurred while fetching data', 'error');
+      showToast(data.message || 'Error occurred while fetching data', 'error');
       throw new Error(`Error: ${response.statusText}`);
     }
 
-    const data = await response.json();
-    showToast('Account created successfully!', 'success');
+    showToast('Login Successfully!', 'success');
     return data;
   } catch (error: any) {
+    console.error('GET Error:', error);
     showToast(error.message || 'An unexpected error occurred', 'error');
     throw error;
   }
@@ -59,20 +60,23 @@ export async function post<T>(url: string, data: unknown): Promise<T> {
       body: JSON.stringify(data),
     });
 
-    const responseData = await response.json();
+    const responseData = await response.json(); 
+    console.log('Response Data:', responseData);
 
     if (!response.ok) {
-      const errorMessage = responseData?.error?.message || "Check your password";
-      showToast(errorMessage, 'error');
-      throw {
-        message: errorMessage,
-      };
+      if (responseData.error.code === "ERR_AUTH_USERNAME_OR_EMAIL_ALREADY_EXIST") {
+        showToast('Username is already taken', 'error');
+      } else if (responseData.error.code === "ERR_AUTH_EMAIL_ALREADY_EXIST") {
+        showToast('Email is already registered', 'error');
+      } 
+      throw new Error(responseData.error.message || 'check your email & username');
     }
-
-    showToast('Login successfully!', 'success');
-    return responseData;
+    showToast('Successfully!', 'success');   
+    return responseData; 
   } catch (error: any) {
+    console.error('POST Error:', error); 
     showToast(error.message || 'An unexpected error occurred', 'error');
     throw error;
   }
 }
+

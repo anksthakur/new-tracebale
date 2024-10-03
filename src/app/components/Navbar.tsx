@@ -41,6 +41,7 @@ const Navbar = () => {
                             <Link href="/ginner" className="text-white hover:bg-black hover:text-red-500 px-3 py-2 rounded-lg">Ginner</Link>
                             <Link href="/spinner" className="text-white hover:bg-black hover:text-red-500 px-3 py-2 rounded-lg">Spinner</Link>
                             <Link href="/knitter" className="text-white hover:bg-black hover:text-red-500 px-3 py-2 rounded-lg">Knitter</Link>
+                            <Link href="/cache" className="text-white hover:bg-black hover:text-red-500 px-3 py-2 rounded-lg">Cache</Link>
                             </> ) }
                             {userRole === 'ginner' && (
                             <Link href="/ginner" className="text-white hover:bg-black hover:text-red-500 px-3 py-2 rounded-lg">Ginner</Link>

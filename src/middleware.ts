@@ -2,10 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 // Define role-based access
 const rolePermissions: Record<string, string[]> = {
-    admin: ['/', '/ginner', '/spinner', '/knitter'],
+    admin: ['/', '/ginner', '/spinner', '/knitter','/cache'],
     ginner: ['/ginner', '/'],
     spinner: ['/spinner', '/'],
-    knitter: ['/knitter', '/'],
+    knitter: ['/knitter', '/']
 };
 
 // Define paths that should be excluded from the middleware
@@ -41,7 +41,7 @@ export async function middleware(request: NextRequest) {
         if (pathname === '/auth/signin' || pathname === '/auth/signup') {
             return NextResponse.next();
         }
-        return NextResponse.redirect(new URL('/auth/login', request.url));
+        return NextResponse.redirect(new URL('/auth/signin', request.url));
     }
 
     if (role) {
