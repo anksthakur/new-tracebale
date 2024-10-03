@@ -1,5 +1,6 @@
 "use client";
 import Cookies from "js-cookie";
+
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
@@ -9,6 +10,7 @@ const headers = {
 
 const storedToken = Cookies.get("token");
 const shownMessages = new Set();
+
 
 const showToast = (message: string, type: 'success' | 'error' = 'success') => {
   if (shownMessages.has(message)) return;
@@ -76,6 +78,7 @@ export async function post<T>(url: string, data: unknown): Promise<T> {
   } catch (error: any) {
     console.error('POST Error:', error); 
     showToast(error.message || 'An unexpected error occurred', 'error');
+    
     throw error;
   }
 }

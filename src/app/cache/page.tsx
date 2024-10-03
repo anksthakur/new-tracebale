@@ -21,7 +21,6 @@ export default function Home() {
                 setData(JSON.parse(cachedData)); 
                 return;
             }else {
-                // Clear expired cache
                 localStorage.removeItem(storeData);
                 localStorage.removeItem(storeDataTime);
             }
@@ -33,7 +32,6 @@ export default function Home() {
         setError(null);
 
         try {
-            // Check for cached data again to avoid  API calls
             const cachedData = localStorage.getItem(storeData);
             const cachedTime = localStorage.getItem(storeDataTime);
             const currentTime = Date.now();
@@ -45,12 +43,11 @@ export default function Home() {
                     setLoading(false);
                     return;
                 }else {
-                    // Clear expired cache
                     localStorage.removeItem(storeData);
                     localStorage.removeItem(storeDataTime);
                 }
             }
-            
+
             const response = await fetch('https://dummyjson.com/products/1'); 
             if (!response.ok) {
                 throw new Error('Network response was not ok');

@@ -39,9 +39,9 @@ const Page = () => {
         router.push("/");
       } else {
         console.log("error")
-        // router.push("/500")
       }
     } catch (error) {
+    // console.log('====================')
      console.log(error)
      router.push('/500')
     }

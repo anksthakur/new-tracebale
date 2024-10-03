@@ -8,7 +8,6 @@ const rolePermissions: Record<string, string[]> = {
     knitter: ['/knitter', '/']
 };
 
-// Define paths that should be excluded from the middleware
 const excludedPaths = [
     '/_next/static/',
     '/favicon.ico',
@@ -18,6 +17,7 @@ const excludedPaths = [
     '/fonts.googleapis.com/',
     '/fonts.gstatic.com/',
     '/api',
+    '/500',
 ];
 
 export async function middleware(request: NextRequest) {
