@@ -1,70 +1,73 @@
 import Cookies from "js-cookie";
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
 const headers = {
   'Content-Type': 'application/json',
 };
 
-const storedToken = Cookies.get("token"); // Dynamically get the token here
-//console.log(storedToken,"======")
-// Common GET request function
+const storedToken = Cookies.get("token");
+
+const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  Toastify({
+    text: message,
+    duration: 3000,
+    close: true,
+    gravity: 'top',
+    position: 'right',
+    backgroundColor: type === 'error' ? 'red' : 'green',
+  }).showToast();
+};
+
 export async function get<T>(url: string): Promise<T> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${storedToken}`,
+        ...headers,
+      },
+    });
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${storedToken}`, // Automatically add the token
-      ...headers, // Include other headers if necessary
-    },
-  });
+    if (!response.ok) {
+      const errorData = await response.json();
+      showToast(errorData.message || 'Error occurred while fetching data', 'error');
+      throw new Error(`Error: ${response.statusText}`);
+    }
 
-  if (!response.ok) {
-    throw new Error(`Error: ${response.statusText}`);
+    const data = await response.json();
+    showToast('Data fetched successfully!', 'success');
+    return data;
+  } catch (error: any) {
+    showToast(error.message || 'An unexpected error occurred', 'error');
+    throw error;
   }
-  return response.json();
 }
 
 export async function post<T>(url: string, data: unknown): Promise<T> {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json', 
-    },
-    body: JSON.stringify(data),
-  });
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        ...headers,
+      },
+      body: JSON.stringify(data),
+    });
 
-  const responseData = await response.json(); 
+    const responseData = await response.json();
 
-  if (!response.ok) {
+    if (!response.ok) {
+      showToast(responseData?.error?.message || "Signup failed", 'error');
       throw {
-      message: responseData?.error?.message || "Unknown error",
-      code: responseData?.error?.code || "UNKNOWN_ERROR",
-    };
+        message: responseData?.error?.message || "Unknown error",
+        code: responseData?.error?.code || "UNKNOWN_ERROR",
+      };
+    }
+
+    showToast('Request was successful!', 'success');
+    return responseData;
+  } catch (error: any) {
+    showToast(error.message || 'An unexpected error occurred', 'error');
+    throw error;
   }
-
-  return responseData; // Return the parsed response data
 }
-
-// Common PUT request function
-// export async function put<T>(url: string, data: unknown): Promise<T> {
-//   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-//     method: 'PUT',
-//     headers,
-//     body: JSON.stringify(data),
-//   });
-//   if (!response.ok) {
-//     throw new Error(`Error: ${response.statusText}`);
-//   }
-//   return response.json();
-// }
-
-// Common DELETE request function
-// export async function del<T>(url: string): Promise<T> {
-//   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
-//     method: 'DELETE',
-//     headers,
-//   });
-//   if (!response.ok) {
-//     throw new Error(`Error: ${response.statusText}`);
-//   }
-//   return response.json();
-// }

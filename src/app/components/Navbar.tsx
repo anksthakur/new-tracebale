@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Cookies from "js-cookie";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toasterSuccess } from './core/Toaster';
 
 const Navbar = () => {
     const router = useRouter();
@@ -21,11 +20,14 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = () => {
-        Cookies.remove('token'); 
-        Cookies.remove('role');
-        Cookies.remove('name');
-        toasterSuccess("Logged out successfully", 3000, "id");
-        router.push("/auth/signin"); 
+       try {
+         Cookies.remove('token'); 
+         Cookies.remove('role');
+         Cookies.remove('name');
+         router.push("/auth/signin"); 
+       } catch (error) {
+        console.error('Logout error:', error);
+       }
     };   
 
     return (

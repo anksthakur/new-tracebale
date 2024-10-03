@@ -1,5 +1,5 @@
 "use client";
-import { toasterError, toasterSuccess } from '@/app/components/core/Toaster';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
@@ -32,25 +32,23 @@ const Page = () => {
     try {
       const newData: any = await post("user/login", formData);
       // console.log(newData, "new Data signin----");
-
       if (newData.success) {
-        toasterSuccess("Login successfully");
         Cookies.set('token', newData.data.accessToken);
         Cookies.set('role', newData.data.user.role);
         Cookies.set('name', newData.data.user.username)
         router.push("/");
       } else {
-        toasterError("Login failed");
+        console.log("error")
       }
     } catch (error) {
-      toasterError("Please check your Email & Password");
+     console.log(error)
     }
   };
 
   return (
     <div className="signup-form flex justify-center items-center h-screen">
       <form onSubmit={handleSubmit} className="lg:w-[36%] mx-auto p-6 border border-gray-300 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-4">Sign In</h2> {/* Changed to "Sign In" */}
+        <h2 className="text-2xl font-bold text-center mb-4">Sign In</h2>
         <div className="mb-4">
           <label className="block text-gray-700 mb-2" htmlFor="email">Email Address</label>
           <input

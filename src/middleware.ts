@@ -3,9 +3,9 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// Define role-based access control rules
-const rolePermissions:any = {
-  admin: ['/', '/ginner', '/spinner', '/knitter', '/auth'],
+// Define role-based access
+const rolePermissions: any = {
+  admin: ['/', '/ginner', '/spinner', '/knitter'],
   ginner: ['/ginner', '/'],
   spinner: ['/spinner', '/'],
   knitter: ['/knitter', '/'],
@@ -16,7 +16,14 @@ export function middleware(request: NextRequest) {
 
   // Retrieve the user role from cookies
   const role = request.cookies.get('role')?.value;
- // console.log("role: ", role); // Logging the role for debugging
+
+  // Check if user is logged in
+  const isLoggedIn = !!role;
+
+  // Redirect if user is logged in and tries to access auth pages
+  if (isLoggedIn && (pathname === '/auth/signin' || pathname === '/auth/signup')) {
+    return NextResponse.redirect(new URL('/', request.url)); // Redirect to home or another appropriate page
+  }
 
   if (role) {
     // Check if the current pathname is allowed for the user role
@@ -30,7 +37,6 @@ export function middleware(request: NextRequest) {
     if (!allowedRoutes.includes(pathname)) {
       // If the route is not allowed for non-admin roles, redirect to home
       return NextResponse.redirect(new URL('/', request.url));
-     //return NextResponse.next();
     }
   } else {
     // If no role is found, redirect to login or unauthorized page

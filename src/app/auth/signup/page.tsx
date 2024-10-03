@@ -2,8 +2,7 @@
 import { post } from '@/lib/Api';
 import Link from 'next/link';
 import React from 'react';
-import Cookies from "js-cookie";
-import { toasterError, toasterSuccess } from '@/app/components/core/Toaster';
+
 import { useRouter } from 'next/navigation';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -52,16 +51,17 @@ const Page: React.FC = () => {
   
 
   const handleSubmit = async (values: FormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
-    const newData: any = await post("user/signup", values);
-
-    if (newData.success) {
-      toasterSuccess("Signup successful");
-      //Cookies.set('token', newData.data?.accessToken);
-      router.push("/auth/signin");
-    } else {
-      toasterError("Signup failed");
+    try {
+      const newData: any = await post("user/signup", values);
+      if (newData.success) {
+        // Cookies.set('token', newData.data?.accessToken);
+        router.push("/auth/signin");
+      } 
+    } catch (error) {
+    console.log(error)
+    } finally {
+      setSubmitting(false); 
     }
-    setSubmitting(false);
   };
 
   return (
